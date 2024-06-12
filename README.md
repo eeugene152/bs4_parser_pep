@@ -10,9 +10,26 @@
 
 # Как запустить проект:
 
-* Клонировать репозиторий.
-* Создайте и активируйте виртуальное окружение.
+* Клонировать репозиторий:
+
+```bash
+    git clone git@github.com:eeugene152/bs4_parser_pep.git
+```
+
+* Создайте и активируйте виртуальное окружение:
+
+```bash
+    python -m venv venv
+    source venv/Scripts/activate
+```
+
 * Обновите менеджер пакетов pip и установите зависимости из файла requirements.txt.
+
+```bash
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+```
+
 * перейти в папку /src.
 * список возможных команд парсера: python main.py --help.
 
@@ -22,4 +39,9 @@
 * BeautifulSoup4
 * PrettyTable
 * Tqdm
-* Logging
+
+# Авторство:
+- Яндекс Практикум (https://practicum.yandex.ru/)
+- Евгений Емельховский
+    mailto: eeugene@yandex.ru
+    https://github.com/eeugene152/
