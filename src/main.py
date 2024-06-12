@@ -88,7 +88,7 @@ def download(session):
     logging.info(ARCHIVE_LOADED_SAVED.format(archive_path=archive_path))
 
 
-def pep(session):
+def pep(session):  # noqa: C901
     status_dict_count = defaultdict(int)
     error_list = []
     results = []
@@ -99,8 +99,7 @@ def pep(session):
     ).find('section', attrs={'id': 'numerical-index'})
     tr_tags = main_div.find_all('tr')
     for tr_tag in tqdm(tr_tags):
-        for abbr_tag in tr_tag.find_all('abbr'):
-            abbr_status_short = abbr_tag.text[1:]
+        abbr_status_short = find_tag(tr_tag, 'abbr').text[1:]
         a_tags = tr_tag.find_all(
             'a', attrs={'class': 'pep reference internal'}
         )
@@ -113,6 +112,7 @@ def pep(session):
             except ConnectionError as error:
                 error_list.append(error)
                 continue
+
             dt_status_head_tag = soup.find(
                 lambda tag: tag.name == 'dt' and 'Status' in tag.text
             )
