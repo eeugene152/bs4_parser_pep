@@ -114,8 +114,7 @@ def pep(session):  # noqa: C901
     ).find('section', attrs={'id': 'numerical-index'})
     tr_tags = main_div.find_all('tr')
     for tr_tag in tqdm(tr_tags):
-        for abbr_tag in tr_tag.find_all('abbr'):
-            abbr_status_short = abbr_tag.text[1:]
+        abbr_status_short = find_tag(tr_tag, 'abbr').text[1:]
         a_tags = tr_tag.find_all(
             'a', attrs={'class': 'pep reference internal'}
         )
