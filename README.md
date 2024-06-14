@@ -16,9 +16,10 @@
     git clone git@github.com:eeugene152/bs4_parser_pep.git
 ```
 
-* Создайте и активируйте виртуальное окружение:
+* В директории проекта создайте и активируйте виртуальное окружение:
 
 ```bash
+    cd bs4_parser_pep
     python -m venv venv
     source venv/Scripts/activate
 ```
@@ -31,7 +32,24 @@
 ```
 
 * перейти в папку /src.
-* список возможных команд парсера: python main.py --help.
+* основные команды для работы с парсером (соответственно):
+    - получить ссылки на статьи о новых изменениях в Python
+    - собрать ссылки на версии Python, их статусы
+    - скачать архив с актуальной информации по Python (файлы в pdf-формате)
+    - собрать статистику по статусам РЕР (список, количество)
+
+```bash
+    python main.py whats-new
+    python main.py latest-versions
+    python main.py download
+    python main.py pep
+```
+
+* список возможных команд парсера:
+
+```bash
+    python main.py --help.
+```
 
 # Применяемые технологии
 
@@ -43,5 +61,5 @@
 # Авторство:
 - Яндекс Практикум (https://practicum.yandex.ru/)
 - Евгений Емельховский
-    mailto: eeugene@yandex.ru
-    https://github.com/eeugene152/
+    Mailto: [[eeugene@yandex.ru]]
+    GitHub: [[https://github.com/eeugene152/]]

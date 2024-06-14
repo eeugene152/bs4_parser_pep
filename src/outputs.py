@@ -4,8 +4,10 @@ import logging
 
 from prettytable import PrettyTable
 
-from constants import (BASE_DIR, CHOICE_FILE,
-                       CHOICE_PRETTY, DATETIME_FORMAT)
+from constants import (
+    CHOICE_FILE, RESULTS_DIR,
+    CHOICE_PRETTY, DATETIME_FORMAT
+)
 
 
 RESULTS_SAVED_TO_FILE = ('Результаты сохранены в файл: {file_path}')
@@ -25,22 +27,15 @@ def pretty_output(results, *args):
 
 
 def file_output(results, cli_args):
-    results_dir = BASE_DIR / 'results'
-    results_dir.mkdir(exist_ok=True)
-    # почему-то этот вариант не проходит тесты
-    # RESULTS_DIR.mkdir(exist_ok=True)
+    RESULTS_DIR.mkdir(exist_ok=True)
 
     parser_mode = cli_args.mode
     now = dt.datetime.now()
     now_formatted = now.strftime(DATETIME_FORMAT)
-    file_name = f'{parser_mode}_{now_formatted}.csv'
-    file_path = results_dir / file_name
-    # почему-то этот вариант не проходит тесты
-    # file_path = RESULTS_DIR / file_name
+    file_path = RESULTS_DIR / f'{parser_mode}_{now_formatted}.csv'
 
     with open(file_path, 'w', encoding='utf-8') as f:
-        writer = csv.writer(f, dialect=csv.unix_dialect)
-        writer.writerows(results)
+        csv.writer(f, dialect=csv.unix_dialect).writerows(results)
     logging.info(RESULTS_SAVED_TO_FILE.format(file_path=file_path))
 
 
