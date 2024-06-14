@@ -103,18 +103,17 @@ def download(session):
     logging.info(ARCHIVE_LOADED_SAVED.format(archive_path=archive_path))
 
 
-def pep(session):  # noqa: C901
+def pep(session):
     status_dict_count = defaultdict(int)
     errors = []
     results = []
     pattern = r'^\d+$'
 
-    main_div = cook_soup(
-        session, PEP_SITE_URL
-    ).find('section', attrs={'id': 'numerical-index'})
-    tr_tags = main_div.find_all('tr')
-    for tr_tag in tqdm(tr_tags):
-        abbr_status_short = find_tag(tr_tag, 'abbr').text[1:]
+    for tr_tag in tqdm(
+        cook_soup(session, PEP_SITE_URL).select('#numerical-index tbody tr')
+    ):
+        abbr_status_short = find_tag(tr_tag, 'td').text[1:]
+
         a_tags = tr_tag.find_all(
             'a', attrs={'class': 'pep reference internal'}
         )
