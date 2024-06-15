@@ -1,6 +1,7 @@
 from pathlib import Path
 from urllib.parse import urljoin
 
+
 CHOICE_FILE = 'file'
 CHOICE_PRETTY = 'pretty'
 DATETIME_FORMAT = '%Y-%m-%d_%H-%M-%S'

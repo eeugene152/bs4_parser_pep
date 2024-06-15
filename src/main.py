@@ -10,9 +10,9 @@ from configs import configure_argument_parser, configure_logging
 from outputs import control_output
 from utils import cook_soup, get_response, find_tag
 from constants import (
-    EXPECTED_STATUS, DOWNLOADS_URL,
-    MAIN_DOC_URL, PEP_SITE_URL,
-    WHATS_NEW_URL, DOWNLOADS_DIR
+    BASE_DIR, EXPECTED_STATUS, DOWNLOADS_URL,
+    MAIN_DOC_URL, PEP_SITE_URL, DOWNLOADS_DIR_NAME,
+    WHATS_NEW_URL
 )
 
 MESSAGE_STATUS_PEP_NOT_MATCHED = (
@@ -96,8 +96,9 @@ def download(session):
         {'href': re.compile(r'.+pdf-a4\.zip$')}
     )
     archive_url = urljoin(DOWNLOADS_URL, pdf_a4_tag['href'])
-    DOWNLOADS_DIR.mkdir(exist_ok=True)
-    archive_path = DOWNLOADS_DIR / archive_url.split('/')[-1]
+    downloads_dir = BASE_DIR / DOWNLOADS_DIR_NAME
+    downloads_dir.mkdir(exist_ok=True)
+    archive_path = downloads_dir / archive_url.split('/')[-1]
     with open(archive_path, 'wb') as file:
         file.write(get_response(session, archive_url).content)
     logging.info(ARCHIVE_LOADED_SAVED.format(archive_path=archive_path))
