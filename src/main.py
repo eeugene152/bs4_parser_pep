@@ -35,7 +35,7 @@ MESSAGE_SEARCH_FAILURE = ('Ничего не нашлось.')
 
 
 def whats_new(session):
-    results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
+    results = [('Ссылка на статью', 'Заголовок', 'Редактор, автор')]
     for a_tag in tqdm(
         cook_soup(
             session, WHATS_NEW_URL
