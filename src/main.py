@@ -35,6 +35,7 @@ MESSAGE_SEARCH_FAILURE = ('Ничего не нашлось.')
 
 
 def whats_new(session):
+    errors = []
     results = [('Ссылка на статью', 'Заголовок', 'Редактор, автор')]
     for a_tag in tqdm(
         cook_soup(
@@ -44,12 +45,11 @@ def whats_new(session):
             'a[href!="changelog.html"][href$=".html"]'
         ), desc='Загрузка из кеша'
     ):
-
         version_link = urljoin(WHATS_NEW_URL, a_tag['href'])
         try:
             soup = cook_soup(session, version_link)
         except ConnectionError as error:
-            logging.exception(
+            errors.append(
                 MESSAGE_URL_FAILURE.format(error=error)
             )
             continue
@@ -58,7 +58,8 @@ def whats_new(session):
              find_tag(soup, 'h1').text,
              find_tag(soup, 'dl').text.replace('\n', ' '))
         )
-
+    for error in errors:
+        logging.info(error)
     return results
 
 
@@ -75,7 +76,7 @@ def latest_versions(session):
             a_tags = ul.find_all('a')
             break
     else:
-        raise ValueError(MESSAGE_SEARCH_FAILURE)
+        raise LookupError(MESSAGE_SEARCH_FAILURE)
 
     results = [('Ссылка на документацию', 'Версия', 'Статус')]
     pattern = r'Python (?P<version>\d\.\d+) \((?P<status>.*)\)'
@@ -125,7 +126,9 @@ def pep(session):
             try:
                 soup = cook_soup(session, pep_link)
             except ConnectionError as error:
-                errors.append(error)
+                errors.append(
+                    MESSAGE_URL_FAILURE.format(error=error)
+                )
                 continue
 
             dt_status_head_tag = soup.find(
@@ -156,7 +159,7 @@ def pep(session):
     return [
             ('Статус', 'Количество'),
             *dict(results).items(),
-            ('Всего', sum(dict(results).values())),
+            ('Всего', sum([i[1] for i in results])),
         ]
 
 

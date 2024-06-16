@@ -1,24 +1,20 @@
-import logging
 from bs4 import BeautifulSoup
 from requests import RequestException
 
 from exceptions import ParserFindTagException
 
-MESSAGE_URL_FAILURE = ('Ошибка загрузки: {url}')
+MESSAGE_CONNECTION_ERROR = ('Ошибка подключения: {error}')
 MESSAGE_TAG_NOT_FOUND = ('Не найден тег {tag} {attrs}')
+MESSAGE_URL_FAILURE = ('Ошибка загрузки: {url}')
 
 
-def get_response(session, url, utf='utf-8'):
+def get_response(session, url, coding='utf-8'):
     try:
         response = session.get(url)
-        response.encoding = utf
-
+        response.encoding = coding
         return response
-    except RequestException:
-        logging.exception(
-            MESSAGE_URL_FAILURE.format(url=url)
-        )
-        raise ConnectionError(MESSAGE_URL_FAILURE.format(url=url))
+    except RequestException as error:
+        raise ConnectionError(MESSAGE_CONNECTION_ERROR.format(error=error))
 
 
 def find_tag(soup, tag, attrs=None):

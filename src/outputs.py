@@ -9,7 +9,6 @@ from constants import (
     CHOICE_PRETTY, DATETIME_FORMAT, RESULTS_PART
 )
 
-RESULTS_DIR = BASE_DIR / 'results'
 
 RESULTS_SAVED_TO_FILE = ('Результаты сохранены в файл: {file_path}')
 
@@ -41,9 +40,11 @@ def file_output(results, cli_args):
     logging.info(RESULTS_SAVED_TO_FILE.format(file_path=file_path))
 
 
-OUTPUT_VARIANTS = {CHOICE_PRETTY: pretty_output,
-                   CHOICE_FILE: file_output,
-                   None: default_output}
+OUTPUT_VARIANTS = {
+    CHOICE_PRETTY: pretty_output,
+    CHOICE_FILE: file_output,
+    None: default_output
+}
 
 
 def control_output(results, cli_args):

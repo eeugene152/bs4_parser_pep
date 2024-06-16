@@ -59,7 +59,7 @@
 * Tqdm
 
 # Авторство:
-- Яндекс Практикум (https://practicum.yandex.ru/)
+- [Яндекс Практикум](https://practicum.yandex.ru/)
 - Евгений Емельховский
-    Mailto: [[eeugene@yandex.ru]]
-    GitHub: [[https://github.com/eeugene152/]]
+    [Mailto:](eeugene@yandex.ru)
+    [GitHub:](https://github.com/eeugene152/)
