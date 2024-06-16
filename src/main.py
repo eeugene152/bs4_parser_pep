@@ -15,7 +15,7 @@ from constants import (
     WHATS_NEW_URL
 )
 
-MESSAGE_STATUS_PEP_NOT_MATCHED = (
+STATUS_PEP_NOT_MATCHED = (
     'Несовпадающие статусы:'
     '{pep_link} '
     'Статус в карточке: {card_status}'
@@ -26,12 +26,12 @@ UNKNOWN_STATUS = (
     'Неизвестный статус {a_tag_link} '
     'в таблице Numerical Index'
 )
-MESSAGE_COMMAND_ARGUMENTS = ('Аргументы командной строки: {args}.')
-MESSAGE_PARSER_LAUNCHED = ('Парсер запущен!')
-MESSAGE_PARSER_FINISHED = ('Парсер завершил работу.')
+COMMAND_ARGUMENTS = ('Аргументы командной строки: {args}.')
+PARSER_LAUNCHED = ('Парсер запущен!')
+PARSER_FINISHED = ('Парсер завершил работу.')
 PARSER_FAILURE = ('Ошибка работы программы: {error}')
-MESSAGE_URL_FAILURE = ('Ошибка загрузки: {error}')
-MESSAGE_SEARCH_FAILURE = ('Ничего не нашлось.')
+URL_FAILURE = ('Ошибка загрузки: {error}')
+SEARCH_FAILURE = ('Ничего не нашлось.')
 
 
 def whats_new(session):
@@ -50,7 +50,7 @@ def whats_new(session):
             soup = cook_soup(session, version_link)
         except ConnectionError as error:
             errors.append(
-                MESSAGE_URL_FAILURE.format(error=error)
+                URL_FAILURE.format(error=error)
             )
             continue
         results.append(
@@ -58,8 +58,7 @@ def whats_new(session):
              find_tag(soup, 'h1').text,
              find_tag(soup, 'dl').text.replace('\n', ' '))
         )
-    for error in errors:
-        logging.info(error)
+    map(lambda error: logging.info(error), errors)
     return results
 
 
@@ -76,7 +75,7 @@ def latest_versions(session):
             a_tags = ul.find_all('a')
             break
     else:
-        raise LookupError(MESSAGE_SEARCH_FAILURE)
+        raise NameError(SEARCH_FAILURE)
 
     results = [('Ссылка на документацию', 'Версия', 'Статус')]
     pattern = r'Python (?P<version>\d\.\d+) \((?P<status>.*)\)'
@@ -108,7 +107,6 @@ def download(session):
 def pep(session):
     status_dict_count = defaultdict(int)
     errors = []
-    results = []
     pattern = r'^\d+$'
 
     for tr_tag in tqdm(
@@ -127,7 +125,7 @@ def pep(session):
                 soup = cook_soup(session, pep_link)
             except ConnectionError as error:
                 errors.append(
-                    MESSAGE_URL_FAILURE.format(error=error)
+                    URL_FAILURE.format(error=error)
                 )
                 continue
 
@@ -141,7 +139,7 @@ def pep(session):
                     abbr_status_short
                 ]:
                     errors.append(
-                        MESSAGE_STATUS_PEP_NOT_MATCHED.format(
+                        STATUS_PEP_NOT_MATCHED.format(
                             pep_link=pep_link,
                             card_status=dt_status_tag.text,
                             table_status=EXPECTED_STATUS[abbr_status_short]
@@ -155,11 +153,10 @@ def pep(session):
                 )
     for error in errors:
         logging.info(error)
-    results.extend(sorted(status_dict_count.items()))
     return [
             ('Статус', 'Количество'),
-            *dict(results).items(),
-            ('Всего', sum([i[1] for i in results])),
+            *status_dict_count.items(),
+            ('Всего', sum(status_dict_count.values())),
         ]
 
 
@@ -173,11 +170,11 @@ MODE_TO_FUNCTION = {
 
 def main():
     configure_logging()
-    logging.info(MESSAGE_PARSER_LAUNCHED)
+    logging.info(PARSER_LAUNCHED)
 
     arg_parser = configure_argument_parser(MODE_TO_FUNCTION.keys())
     args = arg_parser.parse_args()
-    logging.info(MESSAGE_COMMAND_ARGUMENTS.format(args=args))
+    logging.info(COMMAND_ARGUMENTS.format(args=args))
 
     try:
         session = requests_cache.CachedSession()
@@ -193,7 +190,7 @@ def main():
         logging.exception(
             PARSER_FAILURE.format(error=error)
         )
-    logging.info(MESSAGE_PARSER_FINISHED)
+    logging.info(PARSER_FINISHED)
 
 
 if __name__ == '__main__':
